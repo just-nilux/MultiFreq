@@ -25,9 +25,29 @@ cd MultiFreq
 
 Just use `./mf` from your Trading Bot directory.
 
+```
+General
+./mf i <bot-name> create ...................... Create/Init an instance
+./mf i <bot-name> trade ....................... Start Instance
+./mf i <bot-name> stop ........................ Stop Instance
+./mf i <bot-name> pairs <quote> ............... List available exchange pairs
+./mf i <bot-name> configs-pairs <quote> ....... Set TMP pairs, from configs
+./mf i <bot-name> data <days-count> ........... Download data for backtests & hyperopt
+./mf i <bot-name> reset ....................... Reset instance data
+./mf i <bot-name> remove ...................... Remove instance
+./mf i <bot-name> logs ........................ Tail running instance Freqtrade logs
+
+./mf ui start ................................. Start UI
+./mf ui stop .................................. Stop UI
+
+./mf i <bot-name> backtesting <from-date> ................................ Run Backtest (<from-date> Format: 20211102)
+./mf i <bot-name> hyperopt <file> <spaces> <epochs> <freqai> <from-date>.. Run HyperOpt & FreqAI
+```
+
+
 ### Create a new Freqtrade instance
 
-Suppose you want to create an instance named `unicorn`.
+Suppose you want to create an instance named `unicorn`
 
 ```
 ./mf i unicorn create
