@@ -1,11 +1,11 @@
 {
     "stake_currency": "USDT",
-    "max_open_trades": 4,
+    "max_open_trades": 10,
     "stake_amount": "unlimited",
     "unfilledtimeout": {
-        "buy": 30,
-        "sell": 10,
-        "unit": "seconds"
+        "buy": 3,
+        "sell": 3,
+        "unit": "minutes"
     },
     "order_types": {
         "buy": "market",
@@ -38,25 +38,31 @@
             "method": "VolumePairList",
             "number_assets": 60,
             "sort_key": "quoteVolume"
-        },
-        {"method": "AgeFilter", "min_days_listed": 30},
-        {
-            "method": "VolatilityFilter",
-            "lookback_days": 4,
-            "min_volatility": 0.02,
-            "max_volatility": 0.75,
-            "refresh_period": 36000
-        },
-        {"method": "SpreadFilter", "max_spread_ratio": 0.005},
-        {
-            "method": "RangeStabilityFilter",
-            "lookback_days": 3,
-            "min_rate_of_change": 0.1,
-            "refresh_period": 1440
-        },
-        {"method": "PerformanceFilter"},
-        {"method": "PriceFilter", "low_price_ratio": 0.001}
+        }
     ],
+    "freqai": {
+        "enabled": false,
+        "purge_old_models": true,
+        "train_period_days": 30,
+        "backtest_period_days": 7,
+        "identifier" : "unique-id",
+        "feature_parameters" : {
+            "include_timeframes": ["5m","15m","4h"],
+            "include_corr_pairlist": [
+                "ETH/USDT",
+                "BTC/USDT"
+            ],
+            "label_period_candles": 24,
+            "include_shifted_candles": 2,
+            "indicator_periods_candles": [10, 20]
+        },
+        "data_split_parameters" : {
+            "test_size": 0.25
+        },
+        "model_training_parameters" : {
+            "n_estimators": 100
+        },
+    },
     "edge": {
         "enabled": false,
         "process_throttle_secs": 3600,
