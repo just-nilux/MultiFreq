@@ -1,8 +1,8 @@
 FT_DRY_RUN="true"
 FT_INSTANCE_NAME=""
 FT_STRATEGY="SMAOffsetV2" # .......... Change with your wanted Strategy (see ./strategies folder)
-FT_API_SERVER_PORT="12345" # ......... Choose a unique and free port for each instance, and use http(s)://<host>:<port> from UI to connect to
-FT_DRY_RUN_WALLET="500" # ............ Used for dry-run mode and backtesting
+FT_API_SERVER_PORT="8888" # ......... Choose a unique and free port for each instance, and use http(s)://<host>:<port> from UI to connect to
+FT_DRY_RUN_WALLET="1000" # ............ Used for dry-run mode and backtesting
 
 # Add some configuration files.
 # USE ONLY CONFIGURATION PART YOU NEED.
@@ -15,10 +15,10 @@ FT_INSTANCE_CONFIGS=(
     /configs/components/api.json
     # /configs/private/api.json
     /configs/components/exchange.json
-    /configs/private/exchange.kucoin.json
-    # /configs/private/exchange.binance.json
+    #/configs/private/exchange.kucoin.json
+    /configs/private/exchange.binance.json
     # /configs/components/telegram.json
-    # /configs/private/telegram.json
+    /configs/private/telegram.json
     # /configs/components/do-not-run-at-start.json
 )
 
