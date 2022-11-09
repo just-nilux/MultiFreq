@@ -9,17 +9,15 @@ FT_DRY_RUN_WALLET="1000" # ............ Used for dry-run mode and backtesting
 # Private ones are to be updated with your private informations.
 
 FT_INSTANCE_CONFIGS=(
+    /configs/private/api.json
     /configs/components/base.json
     /configs/private/base.config.1.json
-    # /configs/components/protections.json
-    /configs/components/api.json
-    # /configs/private/api.json
-    /configs/components/exchange.json
+    /configs/components/protections.json
+    /configs/components/pairlist-config.json
     #/configs/private/exchange.kucoin.json
     /configs/private/exchange.binance.json
-    # /configs/components/telegram.json
     /configs/private/telegram.json
-    # /configs/components/do-not-run-at-start.json
+    #/configs/components/do-not-run-at-start.json
 )
 
 # Add some configuration files for backesting
