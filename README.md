@@ -26,22 +26,21 @@ cd MultiFreq
 Just use `./mf` from your Trading Bot directory.
 
 ```
-General
-./mf i <bot-name> create ...................... Create/Init an instance
-./mf i <bot-name> trade ....................... Start Instance
-./mf i <bot-name> stop ........................ Stop Instance
-./mf i <bot-name> pairs <quote> ............... List available exchange pairs
-./mf i <bot-name> configs-pairs <quote> ....... Set TMP pairs, from configs
-./mf i <bot-name> data <days-count> ........... Download data for backtests & hyperopt
-./mf i <bot-name> reset ....................... Reset instance data
-./mf i <bot-name> remove ...................... Remove instance
-./mf i <bot-name> logs ........................ Tail running instance Freqtrade logs
+New Instance            ./mf i <instance> create
+Start Instance          ./mf i <instance> trade
+Stop Instance           ./mf i <instance> stop
+List Available Pairs    ./mf i <instance> pairs <quote>
+Create Pairs List       ./mf i <instance> configs-pairs <quote> 
+Download Candle Data    ./mf i <instance> data <number-days> <candles> (Format: 5m_15m_1h_1d)
+Reset instance data     ./mf i <instance> reset
+Remove instance         ./mf i <instance> remove 
+Freqtrade Logs          ./mf i <instance> logs
 
-./mf ui start ................................. Start UI
-./mf ui stop .................................. Stop UI
+Run Backtest            ./mf i <instance> backtesting <from-date> (Format: 20211102)
+Run HyperOpt            ./mf i <instance> hyperopt <loss_file> <spaces> (Format: buy_sell_roi) <freqai> <from-date> 
 
-./mf i <bot-name> backtesting <from-date> ................................ Run Backtest (<from-date> Format: 20211102)
-./mf i <bot-name> hyperopt <file> <spaces> <epochs> <freqai> <from-date>.. Run HyperOpt & FreqAI
+Start Web UI            ./mf ui start 
+Stop Web UI             ./mf ui stop
 ```
 
 
@@ -58,8 +57,8 @@ Now you need to configure your instance parameters from `./instances/unicorn.sh`
 ## Backtesting
 
 ```
-./mf i unicorn data 10 # Download 10 days of data for `unicorn` instance
-./mf i unicorn backtesting # Let's backtest!
+./mf i unicorn data 10          # Download 10 days of data for `unicorn` instance
+./mf i unicorn backtesting      # Let's backtest!
 ```
 
 ## DISCLAIMER
