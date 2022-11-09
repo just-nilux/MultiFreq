@@ -195,14 +195,14 @@ display_help() {
     echo "    ./`basename ${0}` i <instance> pairs <quote> ................... List available exchange pairs"
     echo "    ./`basename ${0}` i <instance> configs-pairs <quote> ........... Set TMP pairs, from configs"
     echo "    ./`basename ${0}` i <instance> data <number-days> <candles> .... Download candle data (<candles> format: 5m_15m_1h_1d)"
-    echo "    ./`basename ${0}` i <instance> backtesting <from-date> ......... Run backtest (<from-date> format: 20211102)"
-    echo "    ./`basename ${0}` i <instance> hyperopt <loss-class> <spaces> <epochs> <freqai-model> <from-date>"
+    echo "    ./`basename ${0}` i <instance> backtesting <from-date> ......... Run backtest (<start-date> format: 20211102)"
+    echo "    ./`basename ${0}` i <instance> hyperopt <loss-class> <spaces> <freqai-model> <start-date>"
     echo "    ./`basename ${0}` i <instance> reset ........................... Reset instance data"
     echo "    ./`basename ${0}` i <instance> remove .......................... Remove instance"
     echo "    ./`basename ${0}` i <instance> logs ............................ Tail running instance Freqtrade logs"
     echo ""
-    echo "    ./`basename ${0}` ui start ............................................. Start UI"
-    echo "    ./`basename ${0}` ui stop .............................................. Stop UI"
+    echo "    ./`basename ${0}` ui start ..................................... Start UI"
+    echo "    ./`basename ${0}` ui stop ...................................... Stop UI"
     echo ""
     echo "    — Note that you can use './`basename ${0}` i <...>' as an alias for './`basename ${0}` instance <...>'"
 }
@@ -286,23 +286,20 @@ handle_instance() {
             fi
             FT_HYPEROPT_SPACES_ARG=""
             if [ ! -z ${ACTION_ARGS[1]} ]; then
-                FT_HYPEROPT_SPACES_ARG="--spaces ${ACTION_ARGS[1]}"
-            fi
-            FT_HYPEROPT_EPOCHS_ARG=""
-            if [ ! -z ${ACTION_ARGS[2]} ]; then
-                FT_HYPEROPT_EPOCHS_ARG="--epochs ${ACTION_ARGS[2]}"
+                SPACES_LIST=$(echo ${ACTION_ARGS[1]} | sed "s/_/ /g")
+                FT_HYPEROPT_SPACES_ARG="--spaces $SPACES_LIST"
             fi
             FT_HYPEROPT_FREQAI_ARG=""
-            if [ ! -z ${ACTION_ARGS[3]} ]; then
-                FT_HYPEROPT_FREQAI_ARG="--freqai ${ACTION_ARGS[3]}"
+            if [ ! -z ${ACTION_ARGS[2]} ]; then
+                FT_HYPEROPT_FREQAI_ARG="--freqai ${ACTION_ARGS[2]}"
             fi
             FT_HYPEROPT_TIMERANGE_ARG=""
-            if [ ! -z ${ACTION_ARGS[4]} ]; then
-                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[4]}"
+            if [ ! -z ${ACTION_ARGS[3]} ]; then
+                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[3]}"
             fi
             ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                 ${VOLUMES_ARGS} ${ENVS_ARGS} \
-                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_EPOCHS_ARG} ${FT_HYPEROPT_FREQAI_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
+                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_FREQAI_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
             exit 0
             ;;
         backtesting)
