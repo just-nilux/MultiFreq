@@ -6,7 +6,7 @@ WORKDIR /app
 
 # ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-RUN wget --quiet https://github.com/freqtrade/frequi/archive/refs/tags/0.2.1.tar.gz -O /tmp/ui.tar.gz \
+RUN wget --quiet https://github.com/freqtrade/frequi/archive/refs/tags/0.4.7.tar.gz -O /tmp/ui.tar.gz \
     && tar xf /tmp/ui.tar.gz -C /app --strip 1 \
     && rm /tmp/ui.tar.gz
 
