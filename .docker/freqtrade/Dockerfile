@@ -6,3 +6,5 @@ RUN pip install -U -r requirements-plot.txt
 RUN pip install technical
 RUN pip install ta
 RUN pip install finta
+RUN pip install ta
+RUN pip install statsmodels
