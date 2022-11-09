@@ -38,10 +38,11 @@ instance_create() {
         exit 1
     fi
 
-    echo "Creating..."
+    echo "Creating Instance..."
 
     cp ${PWD}/.stubs/instances/stub.sh ${INSTANCE_CONFIG_FILE}
     echo "$(sed "2s/.*/FT_INSTANCE_NAME=\""${INSTANCE}"\"/" ${INSTANCE_CONFIG_FILE})" > ${INSTANCE_CONFIG_FILE}
+    echo "$(sed "3s/.*/FT_STRATEGY=\""${INSTANCE}"\"/" ${INSTANCE_CONFIG_FILE})" > ${INSTANCE_CONFIG_FILE}
 
     mkdir -p ${INSTANCE_DIRECTORY} ${INSTANCE_DIRECTORY}/user_data
     touch ${INSTANCE_CONFIG_FILE} \
@@ -103,7 +104,7 @@ instance_init() {
 }
 
 instance_update_backtesting_pairlists() {
-    echo "Updating backtesting/hyperopt pairlists..."
+    echo "Updating pairlists..."
 
     PAIRS_LIST=$(
         ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME}-update-backtesting-pairslist --network freqtrade-bots \
@@ -144,7 +145,7 @@ instance_logs() {
 }
 
 instance_init_backtesting() {
-    echo "Launching backtesting/hyperopt environment..."
+    echo "Launching test environment..."
 
     for CONFIG_BACKTEST_FILE in "${FT_INSTANCE_CONFIGS_BACKTESTING[@]}"; do FT_CONFIGS_ARGS+="--config ${CONFIG_BACKTEST_FILE} "; done
 
@@ -195,7 +196,7 @@ display_help() {
     echo "    ./`basename ${0}` i <instance-name> configs-pairs <quote> ....... Set TMP pairs, from configs"
     echo "    ./`basename ${0}` i <instance-name> data <days-count> ........... Download data for backtests & hyperopt"
     echo "    ./`basename ${0}` i <instance-name> backtesting <from-date> ..... Run backtest (<from-date> format: 20211102)"
-    echo "    ./`basename ${0}` i <instance-name> hyperopt <loss-class> <spaces> <epochs> <from-date>"
+    echo "    ./`basename ${0}` i <instance-name> hyperopt <loss-class> <spaces> <epochs> <freqai-model> <from-date>"
     echo "    ./`basename ${0}` i <instance-name> reset ....................... Reset instance data"
     echo "    ./`basename ${0}` i <instance-name> remove ...................... Remove instance"
     echo "    ./`basename ${0}` i <instance-name> logs ........................ Tail running instance Freqtrade logs"
@@ -282,19 +283,23 @@ handle_instance() {
             fi
             FT_HYPEROPT_SPACES_ARG=""
             if [ ! -z ${ACTION_ARGS[1]} ]; then
-                FT_HYPEROPT_SPACES_ARG="--spaces all"
+                FT_HYPEROPT_SPACES_ARG="--spaces ${ACTION_ARGS[1]}"
             fi
             FT_HYPEROPT_EPOCHS_ARG=""
             if [ ! -z ${ACTION_ARGS[2]} ]; then
                 FT_HYPEROPT_EPOCHS_ARG="--epochs ${ACTION_ARGS[2]}"
             fi
-            FT_HYPEROPT_TIMERANGE_ARG=""
+            FT_HYPEROPT_FREQAI_ARG=""
             if [ ! -z ${ACTION_ARGS[3]} ]; then
-                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[3]}"
+                FT_HYPEROPT_FREQAI_ARG="--freqai ${ACTION_ARGS[3]}"
+            fi
+            FT_HYPEROPT_TIMERANGE_ARG=""
+            if [ ! -z ${ACTION_ARGS[4]} ]; then
+                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[4]}"
             fi
             ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                 ${VOLUMES_ARGS} ${ENVS_ARGS} \
-                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_EPOCHS_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
+                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_EPOCHS_ARG} ${FT_HYPEROPT_FREQAI_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
             exit 0
             ;;
         backtesting)
