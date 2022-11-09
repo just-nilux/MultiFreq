@@ -56,24 +56,6 @@ Just use `./b` from your Trading Bot directory.
 ./b instance unicorn backtesting # Let's backtest!
 ```
 
-## Thanks
-
-![Thanks](https://media.giphy.com/media/PoImMjCPa8QaiBWJd0/giphy.gif)
-
-You want to support this project?
-You are using this project and you want to contribute?
-Feeling generous?
-
-* **BTC** -> `1MksZdEXqFwqNhEiPT5sLhgWijuCH42r9c`
-* **ETH** (ERC20) -> `0x3167ddc7a6b47a0af1ce5270e067a70b997fd313`
-* **BSC - Binance Smart Chain** (BEP20) -> `0x3167ddc7a6b47a0af1ce5270e067a70b997fd313`
-* **Solana** (SOL) -> `DsftXATN6aQe5ppjByzQyJAQ2fJkZcN9UDF8HDiUY7iH`
-* **TRX** (TRC20) -> `TVurVvbyXDzqTKhVXj1eq3U2T8UfVD4KsD`
-
-## Development
-
-![Development](https://media.giphy.com/media/fQZX2aoRC1Tqw/giphy.gif)
-
 ### (Re)Build reference Docker images
 
 ```
