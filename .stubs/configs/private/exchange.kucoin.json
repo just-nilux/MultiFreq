@@ -4,5 +4,12 @@
         "key": "xxx",
         "secret": "xxx",
         "password": "xxx"
+        "ccxt_config": {
+            "enableRateLimit": true
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 100
+        }
     }
 }
