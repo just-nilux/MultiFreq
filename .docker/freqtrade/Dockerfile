@@ -1,4 +1,4 @@
-FROM freqtradeorg/freqtrade:stable
+FROM freqtradeorg/freqtrade:develop_freqai
 
 RUN pip install --upgrade pip
 
