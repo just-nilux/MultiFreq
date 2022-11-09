@@ -189,17 +189,17 @@ ui_init() {
 display_help() {
     echo "🤙 Trading Bot command usage:"
     echo ""
-    echo "    ./`basename ${0}` i <instance-name> create ...................... Create/Init an instance"
-    echo "    ./`basename ${0}` i <instance-name> trade ....................... Start Instance"
-    echo "    ./`basename ${0}` i <instance-name> stop ........................ Stop Instance"
-    echo "    ./`basename ${0}` i <instance-name> pairs <quote> ............... List available exchange pairs"
-    echo "    ./`basename ${0}` i <instance-name> configs-pairs <quote> ....... Set TMP pairs, from configs"
-    echo "    ./`basename ${0}` i <instance-name> data <days-count> ........... Download data for backtests & hyperopt"
-    echo "    ./`basename ${0}` i <instance-name> backtesting <from-date> ..... Run backtest (<from-date> format: 20211102)"
-    echo "    ./`basename ${0}` i <instance-name> hyperopt <loss-class> <spaces> <epochs> <freqai-model> <from-date>"
-    echo "    ./`basename ${0}` i <instance-name> reset ....................... Reset instance data"
-    echo "    ./`basename ${0}` i <instance-name> remove ...................... Remove instance"
-    echo "    ./`basename ${0}` i <instance-name> logs ........................ Tail running instance Freqtrade logs"
+    echo "    ./`basename ${0}` i <instance> create .......................... Create/Init an instance"
+    echo "    ./`basename ${0}` i <instance> trade ........................... Start Instance"
+    echo "    ./`basename ${0}` i <instance> stop ............................ Stop Instance"
+    echo "    ./`basename ${0}` i <instance> pairs <quote> ................... List available exchange pairs"
+    echo "    ./`basename ${0}` i <instance> configs-pairs <quote> ........... Set TMP pairs, from configs"
+    echo "    ./`basename ${0}` i <instance> data <number-days> <candles> .... Download candle data (<candles> format: 5m_15m_1h_1d)"
+    echo "    ./`basename ${0}` i <instance> backtesting <from-date> ......... Run backtest (<from-date> format: 20211102)"
+    echo "    ./`basename ${0}` i <instance> hyperopt <loss-class> <spaces> <epochs> <freqai-model> <from-date>"
+    echo "    ./`basename ${0}` i <instance> reset ........................... Reset instance data"
+    echo "    ./`basename ${0}` i <instance> remove .......................... Remove instance"
+    echo "    ./`basename ${0}` i <instance> logs ............................ Tail running instance Freqtrade logs"
     echo ""
     echo "    ./`basename ${0}` ui start ............................................. Start UI"
     echo "    ./`basename ${0}` ui stop .............................................. Stop UI"
@@ -256,17 +256,20 @@ handle_instance() {
             instance_update_backtesting_pairlists
             instance_init_backtesting
 
-            echo "Downloading data..."
-
-            if [ ! "${ACTION_ARGS[1]}" = "" ]; then
+            TF_LIST=""
+            if [ ! -z ${ACTION_ARGS[1]} ]; then
+               TF_LIST=$(echo ${ACTION_ARGS[1]} | sed "s/_/ /g")
+               echo "Downloading candle data: $TF_LIST"
+               TFLIST=("-t $TF_LIST")
+            fi
+            if [ ! "${ACTION_ARGS[2]}" = "" ]; then
                 ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                     ${VOLUMES_ARGS} ${ENVS_ARGS} \
-                    ${DOCKER_FREQTRADE_IMAGE} download-data ${FT_CONFIGS_ARGS} --days ${ACTION_ARGS[0]} -t {5m,15m,1h} \
-                        --pairs ${ACTION_ARGS[1]}
+                    ${DOCKER_FREQTRADE_IMAGE} download-data ${FT_CONFIGS_ARGS} --days ${ACTION_ARGS[0]} --pairs ${ACTION_ARGS[2]} ${TFLIST}
             else
                 ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                     ${VOLUMES_ARGS} ${ENVS_ARGS} \
-                    ${DOCKER_FREQTRADE_IMAGE} download-data ${FT_CONFIGS_ARGS} --days ${ACTION_ARGS[0]} -t {5m,15m,1h} \
+                    ${DOCKER_FREQTRADE_IMAGE} download-data ${FT_CONFIGS_ARGS} --days ${ACTION_ARGS[0]} ${TFLIST} \
                         --erase
             fi
             exit 0
