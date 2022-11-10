@@ -6,8 +6,8 @@
 
 ### Requirements
 
-* [Binance Account](https://www.binance.com/en/futures/ref/48577931)
 * [Docker](https://www.docker.com/)
+* Recommended 👍 > [Vultr](https://www.vultr.com/?ref=9282993) Affordable Cloud Hosting with Quality CPUs 
 
 ### Install
 ```
@@ -44,21 +44,33 @@ Stop Web UI             ./mf ui stop
 ```
 
 
-### Create a new Freqtrade instance
+### CREATE INSTANCE
 
-Suppose you want to create an instance named `unicorn`
-
+Suppose you want to create a new instance named `scalper`
 ```
-./mf i unicorn create
+./mf i scalper create
+```
+Now set the strategy name and WebUI settings in `./instances/scalper.sh` 
+
+Once that's done update your pairlists and download the latest candle data
+```
+./mf i scalper configs-pairs USDT
+./mf i scalper data 30
 ```
 
-Now you need to configure your instance parameters from `./instances/unicorn.sh`
+## RUN HYPEROPT
 
-## Backtesting
-
+First, download 30 days of candle data for 5m, 15m, 1h, 1d timeframes
+Then launch hyperopt... (See command reference above)
 ```
-./mf i unicorn data 10          # Download 10 days of data for `unicorn` instance
-./mf i unicorn backtesting      # Let's backtest!
+./mf i scalper data 30 5m_15m_1h_4h 
+./mf i scalper hyperopt SharpeHyperOptLoss buy_sell_trailing_stoploss 5000 
+```
+
+## START TRADING 
+Launch as many Freqtrade instances with Web UI as your machine can handle
+```
+./mf i scalper trade
 ```
 
 ## CREDITS
@@ -72,8 +84,7 @@ Do not risk money which you are afraid to lose.
 **USE THIS APPLICATION AT YOUR OWN RISK.** THE AUTHORS AND ALL AFFILIATES ASSUME NO RESPONSIBILITY ABOUT YOUR TRADING RESULTS.
 
 
-### (Re)Build reference Docker images
-
+### (Re)Build Reference Docker images
 ```
 docker pull freqtradeorg/freqtrade:stable
 docker buildx build --no-cache --push --platform linux/amd64 \
