@@ -4,24 +4,24 @@
 * Run multiple instances with the individual config files
 * Support HyperOpt and FreqAI functionality
 
-### Requirements
+### REQUIREMENTS
 
 * [Docker](https://www.docker.com/)
-* Recommended 👍 > [Vultr](https://www.vultr.com/?ref=9282993) Affordable Cloud Hosting with Quality CPUs 
+* 👍 Recommeded: [Vultr Cloud Hosting](https://www.vultr.com/?ref=9282993)| Affordable & Top Performance
 
-### Install
+### INSTALL
 ```
 git clone https://github.com/nomad5am/MultiFreq.git
 cd MultiFreq
 ./mf
 ```
 
-### Configure & Customize
+### CONFIG
 
 * Adapt basic private generated files into `./configs/private`
 * Use or add your strategies into `./strategies`
 
-## Usage
+## CLI
 
 Just use `./mf` from your Trading Bot directory.
 
@@ -29,15 +29,15 @@ Just use `./mf` from your Trading Bot directory.
 New Instance            ./mf i <instance> create
 Start Instance          ./mf i <instance> trade
 Stop Instance           ./mf i <instance> stop
-List Available Pairs    ./mf i <instance> pairs <quote>
+List Pairs              ./mf i <instance> pairs <quote>
 Create Pairs List       ./mf i <instance> configs-pairs <quote> 
 Download Candle Data    ./mf i <instance> data <number-days> <candles> (Format: 5m_15m_1h_1d)
-Reset instance data     ./mf i <instance> reset
-Remove instance         ./mf i <instance> remove 
+Reset Instance          ./mf i <instance> reset
+Remove Instance         ./mf i <instance> remove 
 Freqtrade Logs          ./mf i <instance> logs
 
 Run Backtest            ./mf i <instance> backtesting <from-date> (Format: 20211102)
-Run HyperOpt            ./mf i <instance> hyperopt <loss_file> <spaces> (Format: buy_sell_roi) <freqai> <from-date> 
+Run HyperOpt & FreqAI   ./mf i <instance> hyperopt <loss_file> <spaces> (Format: buy_sell_roi) <freqai> <from-date> 
 
 Start Web UI            ./mf ui start 
 Stop Web UI             ./mf ui stop
@@ -78,12 +78,6 @@ Launch as many Freqtrade instances with Web UI as your machine can handle
 🙏 Thank you [Ph3nol](https://github.com/Ph3nol/FT-Trading-Bot) for starting this project. 
 You provided an incredible boilerplate for more things to come!
 
-## DISCLAIMER
-
-Do not risk money which you are afraid to lose. 
-**USE THIS APPLICATION AT YOUR OWN RISK.** THE AUTHORS AND ALL AFFILIATES ASSUME NO RESPONSIBILITY ABOUT YOUR TRADING RESULTS.
-
-
 ### (Re)Build Reference Docker images
 ```
 docker pull freqtradeorg/freqtrade:stable
@@ -96,3 +90,8 @@ docker buildx build --no-cache --push --platform linux/amd64 \
     --file .docker/freqtrade-ui/Dockerfile \
     --tag ph3nol/freqtrade-ui:latest .
 ```
+
+## DISCLAIMER
+
+Do not risk money which you are afraid to lose. 
+USE THIS APPLICATION AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO RESPONSIBILITY ABOUT YOUR TRADING RESULTS.
