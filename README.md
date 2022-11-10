@@ -61,6 +61,11 @@ Now you need to configure your instance parameters from `./instances/unicorn.sh`
 ./mf i unicorn backtesting      # Let's backtest!
 ```
 
+## CREDITS
+
+🙏 Thank you [Ph3nol](https://github.com/Ph3nol/FT-Trading-Bot) for starting this project. 
+You provided an incredible boilerplate for more things to come!
+
 ## DISCLAIMER
 
 Do not risk money which you are afraid to lose. 
