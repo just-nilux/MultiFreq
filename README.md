@@ -3,27 +3,28 @@
 * Create a new Freqtrade instance with WebUI in one command line 🚀
 * Run multiple instances with the individual config files
 * Support HyperOpt and FreqAI functionality
+* More to come...
 
-### REQUIREMENTS
+## REQUIREMENTS
 
 * [Docker](https://www.docker.com/)
 * 👍 Recommeded: [Vultr Cloud Hosting](https://www.vultr.com/?ref=9282993)| Affordable & Top Performance
 
-### INSTALL
+## INSTALL
 ```
 git clone https://github.com/nomad5am/MultiFreq.git
 cd MultiFreq
 ./mf
 ```
 
-### CONFIG
+## CONFIG
 
-* Adapt basic private generated files into `./configs/private`
-* Use or add your strategies into `./strategies`
+* Create your config in these files `./configs/private`
+* Add your Strategies into `./strategies`
 
 ## CLI
 
-Just use `./mf` from your Trading Bot directory.
+Run `./mf` in the MultiFreq directory
 
 ```
 New Instance            ./mf i <instance> create
@@ -44,7 +45,7 @@ Stop Web UI             ./mf ui stop
 ```
 
 
-### CREATE INSTANCE
+## CREATE INSTANCE
 
 Suppose you want to create a new instance named `scalper`
 ```
@@ -78,7 +79,7 @@ Launch as many Freqtrade instances with Web UI as your machine can handle
 🙏 Thank you [Ph3nol](https://github.com/Ph3nol/FT-Trading-Bot) for starting this project. 
 You provided an incredible boilerplate for more things to come!
 
-### (Re)Build Reference Docker images
+## (Re)Build Reference Docker images
 ```
 docker pull freqtradeorg/freqtrade:stable
 docker buildx build --no-cache --push --platform linux/amd64 \
