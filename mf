@@ -44,11 +44,13 @@ instance_create() {
     echo "$(sed "2s/.*/FT_INSTANCE_NAME=\""${INSTANCE}"\"/" ${INSTANCE_CONFIG_FILE})" > ${INSTANCE_CONFIG_FILE}
     echo "$(sed "3s/.*/FT_STRATEGY=\""${INSTANCE}"\"/" ${INSTANCE_CONFIG_FILE})" > ${INSTANCE_CONFIG_FILE}
 
-    mkdir -p ${INSTANCE_DIRECTORY} ${INSTANCE_DIRECTORY}/user_data
+    mkdir -p ${INSTANCE_DIRECTORY} ${INSTANCE_DIRECTORY}/user_data/data/binance
     touch ${INSTANCE_CONFIG_FILE} \
         ${INSTANCE_DIRECTORY}/tradesv3.sqlite \
         ${INSTANCE_DIRECTORY}/tradesv3.dryrun.sqlite
     chmod -R 777 ${INSTANCE_DIRECTORY}
+    echo "Generating Candle Data..."
+    cp -r ${PWD}/.stubs/candle-data/binance/* ${INSTANCE_DIRECTORY}/user_data/data/binance/
 }
 
 instance_remove() {
@@ -187,22 +189,22 @@ ui_init() {
 }
 
 display_help() {
-    echo "🤙 MF Command Line"
+    echo "🤙 Trading Bot command usage:"
     echo ""
-    echo "    ./`basename ${0}` i <instance> create .......................... Create/Init an instance"
-    echo "    ./`basename ${0}` i <instance> trade ........................... Start Instance"
-    echo "    ./`basename ${0}` i <instance> stop ............................ Stop Instance"
-    echo "    ./`basename ${0}` i <instance> pairs <quote> ................... List available exchange pairs"
-    echo "    ./`basename ${0}` i <instance> configs-pairs <quote> ........... Set TMP pairs, from configs"
-    echo "    ./`basename ${0}` i <instance> data <number-days> <candles> .... Download candle data (<candles> format: 5m_15m_1h_1d)"
-    echo "    ./`basename ${0}` i <instance> backtesting <from-date> ......... Run backtest (<start-date> format: 20211102)"
-    echo "    ./`basename ${0}` i <instance> hyperopt <loss-class> <spaces> <freqai-model> <start-date> (<spaces> format: buy_roi_stoploss)" 
-    echo "    ./`basename ${0}` i <instance> reset ........................... Reset instance data"
-    echo "    ./`basename ${0}` i <instance> remove .......................... Remove instance"
-    echo "    ./`basename ${0}` i <instance> logs ............................ Tail running instance Freqtrade logs"
+    echo "    ./`basename ${0}` i <instance-name> create ...................... Create/Init an instance"
+    echo "    ./`basename ${0}` i <instance-name> trade ....................... Start Instance"
+    echo "    ./`basename ${0}` i <instance-name> stop ........................ Stop Instance"
+    echo "    ./`basename ${0}` i <instance-name> pairs <quote> ............... List available exchange pairs"
+    echo "    ./`basename ${0}` i <instance-name> configs-pairs <quote> ....... Set TMP pairs, from configs"
+    echo "    ./`basename ${0}` i <instance-name> data <days-count> ........... Download data for backtests & hyperopt"
+    echo "    ./`basename ${0}` i <instance-name> backtesting <from-date> ..... Run backtest (<from-date> format: 20211102)"
+    echo "    ./`basename ${0}` i <instance-name> hyperopt <loss-class> <spaces> <epochs> <freqai-model> <from-date>"
+    echo "    ./`basename ${0}` i <instance-name> reset ....................... Reset instance data"
+    echo "    ./`basename ${0}` i <instance-name> remove ...................... Remove instance"
+    echo "    ./`basename ${0}` i <instance-name> logs ........................ Tail running instance Freqtrade logs"
     echo ""
-    echo "    ./`basename ${0}` ui start ..................................... Start UI"
-    echo "    ./`basename ${0}` ui stop ...................................... Stop UI"
+    echo "    ./`basename ${0}` ui start ............................................. Start UI"
+    echo "    ./`basename ${0}` ui stop .............................................. Stop UI"
     echo ""
     echo "    — Note that you can use './`basename ${0}` i <...>' as an alias for './`basename ${0}` instance <...>'"
 }
@@ -262,7 +264,7 @@ handle_instance() {
                echo "Downloading candle data: $TF_LIST"
                TFLIST=("-t $TF_LIST")
             fi
-            if [ ! "${ACTION_ARGS[2]}" = "" ]; then
+            if [ ! "${ACTION_ARGS[2]}" = "KEEP" ]; then
                 ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                     ${VOLUMES_ARGS} ${ENVS_ARGS} \
                     ${DOCKER_FREQTRADE_IMAGE} download-data ${FT_CONFIGS_ARGS} --days ${ACTION_ARGS[0]} --pairs ${ACTION_ARGS[2]} ${TFLIST}
@@ -289,17 +291,21 @@ handle_instance() {
                 SPACES_LIST=$(echo ${ACTION_ARGS[1]} | sed "s/_/ /g")
                 FT_HYPEROPT_SPACES_ARG="--spaces $SPACES_LIST"
             fi
-            FT_HYPEROPT_FREQAI_ARG=""
+            FT_HYPEROPT_E_ARG=""
             if [ ! -z ${ACTION_ARGS[2]} ]; then
-                FT_HYPEROPT_FREQAI_ARG="--freqai ${ACTION_ARGS[2]}"
+                FT_HYPEROPT_E_ARG="--epochs ${ACTION_ARGS[2]}"
+            fi
+            FT_HYPEROPT_FREQAI_ARG=""
+            if [ ! -z ${ACTION_ARGS[3]} ]; then
+                FT_HYPEROPT_FREQAI_ARG="--freqai ${ACTION_ARGS[3]}"
             fi
             FT_HYPEROPT_TIMERANGE_ARG=""
-            if [ ! -z ${ACTION_ARGS[3]} ]; then
-                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[3]}"
+            if [ ! -z ${ACTION_ARGS[4]} ]; then
+                FT_HYPEROPT_TIMERANGE_ARG="--timerange ${ACTION_ARGS[4]}"
             fi
             ${DOCKER_RUN} --name ${DOCKER_CONTAINER_NAME} --network freqtrade-bots \
                 ${VOLUMES_ARGS} ${ENVS_ARGS} \
-                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_FREQAI_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
+                ${DOCKER_FREQTRADE_IMAGE} hyperopt ${FT_HYPEROPT_LOSS_ARG} ${FT_HYPEROPT_SPACES_ARG} ${FT_HYPEROPT_E_ARG} --strategy ${FT_STRATEGY} ${FT_CONFIGS_ARGS} ${FT_HYPEROPT_FREQAI_ARG} ${FT_HYPEROPT_TIMERANGE_ARG} --ignore-missing-spaces
             exit 0
             ;;
         backtesting)
