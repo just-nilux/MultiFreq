@@ -81,10 +81,10 @@ You provided an incredible boilerplate for more things to come!
 
 ## (Re)Build Reference Docker images
 ```
-docker pull freqtradeorg/freqtrade:stable
+docker pull freqtradeorg/freqtrade:develop_freqai
 docker buildx build --no-cache --push --platform linux/amd64 \
     --file .docker/freqtrade/Dockerfile \
-    --tag ph3nol/freqtrade:latest .
+    --tag freqtradeorg/freqtrade:develop_freqai .
 
 # Update .docker/freqtrade-ui/Dockerfile UI archive version before building Docker image
 docker buildx build --no-cache --push --platform linux/amd64 \
